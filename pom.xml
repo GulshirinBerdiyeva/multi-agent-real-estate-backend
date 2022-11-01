@@ -107,5 +107,9 @@
         </repository>
     </repositories>
 
-    <modules></modules>
+    <modules>
+        <module>data-agent</module>
+        <module>seller-agent</module>
+        <module>customer-agent</module>
+    </modules>
 </project>
