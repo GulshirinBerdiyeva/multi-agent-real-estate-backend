@@ -1,0 +1,71 @@
+server:
+  forward-headers-strategy: framework
+
+spring:
+  output:
+    ansi:
+      enabled: ALWAYS
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      leak-detection-threshold: 30000
+  jpa:
+    database: POSTGRESQL
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    show-sql: true
+    hibernate:
+      ddl-auto: validate
+  flyway:
+    locations:
+      - classpath:db/migration
+      - classpath:db/testdata
+    baseline-on-migrate: true
+  kafka:
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.LongSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+kafka:
+  topic:
+
+eureka:
+  instance:
+    prefer-ip-address: true
+
+management:
+  endpoint:
+    restart:
+      enabled: true
+    shutdown:
+      enabled: true
+    env:
+      post:
+        enabled: true
+    health:
+      show-details: always
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+logging:
+  pattern:
+    console: "%clr(%d{HH:mm:ss.SSS}){blue} %clr(---){faint} %clr([%15.15t]){yellow} %clr(:){red} %clr(%m){faint}%n"
+---
+server:
+  port: 8094
+
+spring:
+  config:
+    activate:
+      on-profile: localhost
+  datasource:
+    url: jdbc:postgresql://localhost:5432/multi_agent_data
+    username: postgres
+    password: postgres
+  kafka:
+    bootstrap-servers: ${KAFKA_HOST:::1}:${KAFKA_PORT:9092}
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:9761/eureka/

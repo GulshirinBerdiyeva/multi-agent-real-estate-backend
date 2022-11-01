@@ -1,0 +1,39 @@
+server:
+  port: 9149
+
+spring:
+  application:
+    name: config-server
+  output:
+    ansi:
+      enabled: ALWAYS
+
+management:
+  endpoint:
+    restart:
+      enabled: true
+    shutdown:
+      enabled: true
+    env:
+      post:
+        enabled: true
+    health:
+      show-details: always
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+logging:
+  pattern:
+    console: "%clr(%d{HH:mm:ss.SSS}){blue} %clr(---){faint} %clr([%15.15t]){yellow} %clr(:){red} %clr(%m){faint}%n"
+---
+spring:
+  cloud:
+    config:
+      server:
+        native:
+          search-locations: file:///${GIT_REPO_URI_LOCAL}/configs/{application}
+  config:
+    activate:
+      on-profile: native

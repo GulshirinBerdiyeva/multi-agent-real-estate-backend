@@ -1,0 +1,92 @@
+server:
+  port: 9769
+  forward-headers-strategy: native
+
+eureka:
+  instance:
+    prefer-ip-address: true
+management:
+  endpoint:
+    restart:
+      enabled: true
+    shutdown:
+      enabled: true
+    env:
+      post:
+        enabled: true
+    health:
+      show-details: always
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+spring:
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+      routes:
+        - id: openapi
+          uri: http://localhost:${server.port}
+          predicates:
+            - Path=/v3/api-docs/**
+          filters:
+            - RewritePath=/v3/api-docs/(?<path>.*), /$\{path}/v3/api-docs
+        - id: auth-service-openapi
+          uri: lb://auth-service
+          predicates:
+            - Path=/auth/v3/api-docs
+            - Method=GET
+          filters:
+            - RewritePath=/auth/v3/api-docs, /v3/api-docs
+        - id: auth-service
+          uri: lb://auth-service
+          predicates:
+            - Path=/auth/api/v**/auth/** , /api/v**/auth/**
+            - Method=POST
+          filters:
+            - RewritePath= ^/auth/(?<path>.*), /$\{path}
+        - id: seller-agent-openapi
+          uri: lb://seller-agent
+          predicates:
+            - Path=/seller-agent/v3/api-docs
+            - Method=GET
+          filters:
+            - RewritePath=/seller-agent/v3/api-docs, /v3/api-docs
+        - id: seller-agent
+          uri: lb://seller-agent
+          predicates:
+            - Path=/api/v**/seller/** , /seller-agent/api/v**/seller/**
+            - Method=POST, PUT, PATCH, DELETE
+          filters:
+            - AuthFilter
+            - RewritePath=^/seller-agent/(?<path>.*), /$\{path}
+        - id: customer-agent-openapi
+          uri: lb://customer-agent
+          predicates:
+            - Path=/customer-agent/v3/api-docs
+            - Method=GET
+          filters:
+            - RewritePath=/customer-agent/v3/api-docs, /v3/api-docs
+        - id: seller-agent
+          uri: lb://seller-agent
+          predicates:
+            - Path=/api/v**/customer/** , /customer-agent/api/v**/seller/**
+            - Method=POST, PUT, PATCH, DELETE
+          filters:
+            - AuthFilter
+            - RewritePath=^/customer-agent/(?<path>.*), /$\{path}
+---
+spring:
+  config:
+    activate:
+      on-profile: localhost
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:9761/eureka/
+authentication:
+  token:
+    key: secret

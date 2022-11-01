@@ -1,0 +1,33 @@
+server:
+  port: 9761
+  forward-headers-strategy: native
+
+eureka:
+  client:
+    registerWithEureka: false
+    fetchRegistry: false
+
+management:
+  endpoint:
+    restart:
+      enabled: true
+    shutdown:
+      enabled: true
+    env:
+      post:
+        enabled: true
+    health:
+      show-details: always
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+---
+spring:
+  config:
+    activate:
+      on-profile: localhost
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:9761/eureka/

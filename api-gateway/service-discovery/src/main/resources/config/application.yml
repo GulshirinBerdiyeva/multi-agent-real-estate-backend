@@ -1,0 +1,16 @@
+spring:
+  application:
+    name: service-discovery
+  output:
+    ansi:
+      enabled: ALWAYS
+
+logging:
+  pattern:
+    console: "%clr(%d{HH:mm:ss.SSS}){blue} %clr(---){faint} %clr([%15.15t]){yellow} %clr(:){red} %clr(%m){faint}%n"
+---
+spring:
+  config:
+    import: configserver:http://localhost:9149
+    activate:
+      on-profile: localhost
