@@ -1,0 +1,9 @@
+spring:
+  application:
+    name: seller-agent
+---
+spring:
+  config:
+    import: configserver:http://localhost:9149
+    activate:
+      on-profile: localhost
