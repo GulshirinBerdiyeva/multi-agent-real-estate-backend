@@ -21,7 +21,7 @@ public class EmailAndPasswordDto {
     private String email;
 
     @NotNull
-    @Schema(example = "Qwerty!")
+    @Schema(example = "Qwerty1!")
     @Pattern(
             regexp = RegexConstants.PASSWORD_REGEX,
             message = "Password must contain at least one character from at least three character groups " +

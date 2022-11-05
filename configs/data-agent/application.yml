@@ -21,11 +21,16 @@ spring:
       - classpath:db/testdata
     baseline-on-migrate: true
   kafka:
+    consumer:
+      group-id: data-agent
+      key-deserializer: org.apache.kafka.common.serialization.LongDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
     producer:
       key-serializer: org.apache.kafka.common.serialization.LongSerializer
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
 kafka:
   topic:
+    new-estate: new-estate
 
 eureka:
   instance:

@@ -20,16 +20,6 @@ spring:
       - classpath:db/migration
       - classpath:db/testdata
     baseline-on-migrate: true
-  kafka:
-    consumer:
-      group-id: auth-service
-      key-deserializer: org.apache.kafka.common.serialization.LongDeserializer
-      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-    producer:
-      key-serializer: org.apache.kafka.common.serialization.LongSerializer
-      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
-kafka:
-  topic:
 
 eureka:
   instance:
@@ -75,8 +65,6 @@ spring:
     url: jdbc:postgresql://localhost:5432/multi_agent_auth
     username: postgres
     password: postgres
-  kafka:
-    bootstrap-servers: ${KAFKA_HOST:::1}:${KAFKA_PORT:9092}
 
 eureka:
   client:

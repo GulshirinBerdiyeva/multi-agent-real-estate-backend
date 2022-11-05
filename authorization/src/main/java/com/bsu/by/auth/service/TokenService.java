@@ -1,6 +1,5 @@
 package com.bsu.by.auth.service;
 
-import com.bsu.by.auth.dto.response.success.TokensAndUserIdDto;
 import com.bsu.by.auth.exception.conflict.RefreshTokenWithNoSessionException;
 import com.bsu.by.auth.model.RefreshToken;
 import com.bsu.by.auth.model.Role;
@@ -67,15 +66,6 @@ public class TokenService {
         refreshTokenRepository.save(newRefreshToken);
 
         return Pair.of(accessToken, refreshToken);
-    }
-
-    @Transactional
-    public TokensAndUserIdDto generateAccessAndRefreshTokens(String oldRefreshToken) {
-        Claims claims = jwtUtil.validateRefreshTokenAndReturnClaims(oldRefreshToken);
-        User user = userUtil.findUserById(claims.getSubject());
-
-        Pair<String, String> tokens = generateAccessAndRefreshTokens(user);
-        return responseUtil.createTokensAndUserIdDto(tokens, user.getId());
     }
 
     @Transactional(isolation = Isolation.REPEATABLE_READ)

@@ -48,7 +48,22 @@ spring:
             - Method=POST
           filters:
             - RewritePath= ^/auth/(?<path>.*), /$\{path}
-        - id: seller-agent-openapi
+        - id: customer-agent-service-openapi
+          uri: lb://customer-agent
+          predicates:
+            - Path=/customer-agent/v3/api-docs
+            - Method=GET
+          filters:
+            - RewritePath=/customer-agent/v3/api-docs, /v3/api-docs
+        - id: customer-agent
+          uri: lb://customer-agent
+          predicates:
+            - Path=/api/v**/estates/** , /customer-agent/api/v**/estates/**
+            - Method=GET
+          filters:
+            - AuthFilter
+            - RewritePath=^/customer-agent/(?<path>.*), /$\{path}
+        - id: seller-agent-service-openapi
           uri: lb://seller-agent
           predicates:
             - Path=/seller-agent/v3/api-docs
@@ -58,26 +73,11 @@ spring:
         - id: seller-agent
           uri: lb://seller-agent
           predicates:
-            - Path=/api/v**/seller/** , /seller-agent/api/v**/seller/**
-            - Method=POST, PUT, PATCH, DELETE
+            - Path=/api/v**/estates/** , /seller-agent/api/v**/estates/**
+            - Method=POST
           filters:
             - AuthFilter
             - RewritePath=^/seller-agent/(?<path>.*), /$\{path}
-        - id: customer-agent-openapi
-          uri: lb://customer-agent
-          predicates:
-            - Path=/customer-agent/v3/api-docs
-            - Method=GET
-          filters:
-            - RewritePath=/customer-agent/v3/api-docs, /v3/api-docs
-        - id: seller-agent
-          uri: lb://seller-agent
-          predicates:
-            - Path=/api/v**/customer/** , /customer-agent/api/v**/seller/**
-            - Method=POST, PUT, PATCH, DELETE
-          filters:
-            - AuthFilter
-            - RewritePath=^/customer-agent/(?<path>.*), /$\{path}
 ---
 spring:
   config:

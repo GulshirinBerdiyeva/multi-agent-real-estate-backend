@@ -15,21 +15,19 @@ spring:
     show-sql: true
     hibernate:
       ddl-auto: validate
-  flyway:
-    locations:
-      - classpath:db/migration
-      - classpath:db/testdata
-    baseline-on-migrate: true
+  servlet:
+    multipart:
+      enabled: true
+      file-size-threshold: 20MB
+      max-request-size: 20MB
+      max-file-size: 20MB
   kafka:
-    consumer:
-      group-id: seller-agent
-      key-deserializer: org.apache.kafka.common.serialization.LongDeserializer
-      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
     producer:
       key-serializer: org.apache.kafka.common.serialization.LongSerializer
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
 kafka:
   topic:
+    new-estate: new-estate
 
 eureka:
   instance:
@@ -55,8 +53,6 @@ authentication:
   token:
     issuer: multi_agent_seller
     type: Bearer
-    # 1 hour
-    accessTokenExpirationSec: 3600
 
 logging:
   pattern:
@@ -70,7 +66,7 @@ spring:
     activate:
       on-profile: localhost
   datasource:
-    url: jdbc:postgresql://localhost:5432/multi_agent_seller
+    url: jdbc:postgresql://localhost:5432/multi_agent_data
     username: postgres
     password: postgres
   kafka:
@@ -84,3 +80,6 @@ eureka:
 authentication:
   token:
     key: secret
+
+upload:
+  path: C:/uploads

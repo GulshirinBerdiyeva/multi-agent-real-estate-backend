@@ -1,29 +1,28 @@
-create table if not exists roles (
-    id          text not null primary key,
-    name        text not null,
-    authorities text[],
-    version     integer default 1
+create table if not exists users (
+    id       text not null primary key,
+    email    text not null unique,
+    version  integer default 1
 );
 
-create table if not exists users (
-    id                  text not null primary key,
-    mobile_phone        varchar(10) not null unique,
-    password            text not null,
-    role_id             text constraint fk_users_role references roles(id) on delete cascade,
-    version             integer default 1
+create table if not exists estates (
+    id          text not null primary key,
+    apartment   bool not null,
+    location    text not null,
+    area        float8 not null,
+    description text not null,
+    file_name   text not null,
+    version     integer not null default 1
 );
+create index estate_location on estates(location);
 
 create table if not exists events (
     id        text not null primary key,
     type      text not null,
     entity_id text not null,
-    author_id text constraint fk_events_user REFERENCES users (id) on delete cascade,
     context   text not null,
     date_time timestamp not null,
-    parent_id text,
     payload   jsonb,
     version   integer default 1
 );
-
 create index cx_event_date_time on events (date_time);
 cluster events using cx_event_date_time;

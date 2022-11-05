@@ -11,5 +11,4 @@ public interface RefreshTokenRepository extends JpaRepository<RefreshToken, Stri
     boolean existsByHash(String hash);
     void deleteAllByExpiryDateTimeBefore(Instant currentDateTime);
     void deleteByHash(String hash);
-    void deleteByUserId(String userId);
 }
