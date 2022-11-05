@@ -1,0 +1,6 @@
+{
+  "apartment": true,
+  "location": "Minsk",
+  "area": 50,
+  "description": "your best choice..."
+}
